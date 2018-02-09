@@ -1,0 +1,117 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+
+@model IEnumerable<OBL.Data.Entities.Book>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2 style="font-weight:bold">Books</h2>
+
+<p>
+    @if (User.IsInRole("Admin"))
+    {
+        @Html.ActionLink("Create New", "Create")
+    }
+</p>
+<hr />
+
+<div style="background-color:white; opacity:0.9; border-radius:9px">
+
+    @using (Html.BeginForm())
+    {
+        <div class="col-md-12" style="padding-top:10px; padding-bottom:45px">
+            <div class="col-md-2">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    @Html.TextBox("Search", (string)ViewBag.Search, new { @class = "form-control" })
+                }
+            </div>
+
+            <div class="col-md-2">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    @Html.DropDownList("SearchValue", null, htmlAttributes: new { @class = "form-control" })
+                }
+            </div>
+
+            <div class="col-md-2">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <button class="btn btn-primary">
+                        <i class="glyphicon glyphicon-search"></i>Search
+                    </button>
+                }
+            </div>
+        </div>
+
+    }
+
+    <table class="table">
+        <tr style="font-size:20px;">
+            <th>
+                @Html.ActionLink("Title", "Index", new { sortOrder = ViewBag.TitleSortParm, Search = ViewBag.Search })
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReleaseDate)
+            </th>
+            <th>
+                @Html.ActionLink("Author", "Index", new { sortOrder = ViewBag.AuthorSortParm, Search = ViewBag.Search })
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Genre.GenreName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReleaseDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genre.GenreName)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+
+
+                <td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        @Html.ActionLink("Edit", "Edit", new { id = item.BookId })
+
+                    }
+                    |
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        @Html.ActionLink("Details", "Details", new { id = item.BookId })
+                    }
+                    |
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        @Html.ActionLink("Delete", "Delete", new { id = item.BookId })
+                    }
+                </td>
+
+            </tr>
+        }
+
+    </table>
+    </div>
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page, titleSearch = ViewBag.TitleSearch, sortOrder = ViewBag.CurrentSortParm }))

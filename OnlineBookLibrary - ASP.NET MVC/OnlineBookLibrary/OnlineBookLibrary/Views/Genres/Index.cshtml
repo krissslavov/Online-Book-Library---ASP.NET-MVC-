@@ -1,0 +1,62 @@
+﻿@model IEnumerable<OBL.Data.Entities.Genre>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2 style="font-weight:bold">Genres</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<div style="background-color:white; opacity:0.9; border-radius:9px">
+
+    @using (Html.BeginForm())
+    {
+        <div class="col-md-12" style="padding:10px;">
+            <div class="col-md-2">
+                @Html.TextBox("descriptionSearch", (string)ViewBag.DescriptionSearch, new { @class = "form-control" })
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary">
+                    <i class="glyphicon glyphicon-search"></i>Description Search
+                </button>
+            </div>
+        </div>
+    }
+
+
+
+<table class="table"">
+    <tr style="font-size:20px;">
+        <th>
+            @Html.DisplayNameFor(model => model.GenreName)
+
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.GenreName)
+
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.GenreId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.GenreId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.GenreId })
+            </td>
+        </tr>
+    }
+
+</table>
+   </div>
